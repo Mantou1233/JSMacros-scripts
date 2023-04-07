@@ -66,35 +66,33 @@ function parseText(text: string) {
 }
 
 function parseNode(array: string[]): ColorNode[] {
-	const nodes: ColorNode[] = [];
-	for (let text of array) {
+	return array.map(text => {
 		if (!text.startsWith("^&"))
-			nodes.push({
-				type: "Text",
-				value: text
-			});
+		    return {
+			type: "Text",
+			value: text
+		    };
 		else if (text.startsWith("^&gr"))
-			nodes.push({
-				type: "GradientReset",
-				value: "true"
-			});
+		    return {
+			type: "GradientReset",
+			value: "true"
+		    };
 		else if (text.startsWith("^&g"))
-			nodes.push({
-				type: "GradientColorStop",
-				value: text.slice(3, 9)
-			});
+		    return {
+			type: "GradientColorStop",
+			value: text.slice(3, 9)
+		    };
 		else if (text.startsWith("^&#"))
-			nodes.push({
-				type: "CustomColor",
-				value: text.slice(3, 9)
-			});
+		    return {
+			type: "CustomColor",
+			value: text.slice(3, 9)
+		    };
 		else if (text.startsWith("^&"))
-			nodes.push({
-				type: "Color",
-				value: text.slice(2, 3)
-			});
-	}
-	return nodes;
+		    return {
+			type: "Color",
+			value: text.slice(2, 3)
+		    };
+    	})
 }
 function generateText(nodes: ColorNode[]): SoupLike[] {
 	let currentGradient = [],
