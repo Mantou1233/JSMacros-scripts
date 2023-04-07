@@ -1,0 +1,7 @@
+{
+	"name": "macros",
+	"version": "1.0.0",
+	"scripts": {
+		"a": "tsx scripts/services/formatter.ts"
+	}
+}

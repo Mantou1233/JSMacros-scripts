@@ -1,4 +1,12 @@
-import { getGradients, soup2JSON, presets, soup2Str } from "../services/color";
+import {
+	getGradients,
+	soup2JSON,
+	presets,
+	soup2Str,
+	convertToHex,
+	convertToRGB
+} from "../services/color";
+import { getSoupEffect } from "../services/formatter";
 import { commands } from "../services/loader";
 
 function validateHex(str: string) {
@@ -11,34 +19,39 @@ function validateHex(str: string) {
 }
 
 const command = Chat.createCommandBuilder("color")
-	.quotedStringArg("color")
-	.suggest(
-		jfn(function (ctx, suggest) {
-			presets.forEach(pre => getPreview(suggest, pre));
-			const vl = validateHex(suggest.getRemaining());
-			if (vl.length !== 0) getPreview(suggest, vl);
-			return Client;
+	.literalArg("getText")
+	.greedyStringArg("text")
+	.executes(
+		jfn(ctx => {
+			const soup = $f(ctx.getArg("text"));
+			const charredSoup = soup.map(v => ({
+				char: getSoupEffect(v) + v.text,
+				color: v.color ? convertToRGB(v.color) : null
+			}));
+			Chat.log(
+				Chat.createTextBuilder()
+					.append(
+						Chat.createTextHelperFromJSON(
+							JSON.stringify(soup2JSON(charredSoup))
+						)
+					)
+					.withClickEvent("copy_to_clipboard", soup2Str(charredSoup))
+			);
 		})
 	)
-	.greedyStringArg("text");
-command.executes(
-	jfn(ctx => {
-		const colors = validateHex(ctx.getArg("color"));
-		if (colors.length == 0) {
-			Chat.log("no colors specified!");
-		}
-		const soup = getGradients(ctx.getArg("text") || "undefined", colors);
-		Chat.log(
-			Chat.createTextBuilder()
-				.append(
-					Chat.createTextHelperFromJSON(
-						JSON.stringify(soup2JSON(soup))
-					)
-				)
-				.withClickEvent("copy_to_clipboard", soup2Str(soup))
-		);
-	})
-);
+	.or(2)
+	.literalArg("getJson")
+	.greedyStringArg("text")
+	.executes(
+		jfn(ctx => {
+			const soup = $f(ctx.getArg("text"));
+			Chat.log(
+				Chat.createTextBuilder()
+					.append(Chat.createTextHelperFromJSON(JSON.stringify(soup)))
+					.withClickEvent("copy_to_clipboard", JSON.stringify(soup))
+			);
+		})
+	);
 commands.add(command);
 
 function getPreview(

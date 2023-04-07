@@ -42,12 +42,12 @@ function trim(s) {
 /**
  * Convert a hex string to an RGB triplet
  */
-function convertToRGB(hex) {
+function convertToRGB(hex): RGBResolvable {
 	let color = [];
 	color[0] = parseInt(trim(hex).substring(0, 2), 16);
 	color[1] = parseInt(trim(hex).substring(2, 4), 16);
 	color[2] = parseInt(trim(hex).substring(4, 6), 16);
-	return color;
+	return color as RGBResolvable;
 }
 
 /**
@@ -137,8 +137,29 @@ class TwoStopGradient {
 }
 
 type RGBResolvable = [red: number, green: number, blue: number];
+interface SoupLike {
+	text: string;
+	color?: string;
+	obfuscated?: boolean;
+	bold?: boolean;
+	strikethrough?: boolean;
+	underline?: boolean;
+	italic?: boolean;
+	reset?: boolean;
+}
 
 function getGradients(text: string, colors: string[]) {
+	if (text.length == 2 && colors.length >= 2)
+		return [
+			{
+				color: convertToRGB(colors[0]),
+				char: text[0]
+			},
+			{
+				color: convertToRGB(colors[colors.length - 1]),
+				char: text[1]
+			}
+		];
 	let gradientor = new Gradient(
 		colors.map(convertToRGB),
 		text.replace(/ /g, "").length
@@ -191,6 +212,7 @@ export {
 	soup2JSON,
 	soup2Str,
 	RGBResolvable,
+	SoupLike,
 	getRandomHexColor,
 	presets,
 	convertToRGB,

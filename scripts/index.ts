@@ -1,6 +1,7 @@
 if (!World.isWorldLoaded()) JsMacros.waitForEvent("ChunkLoad");
+import type { SoupLike } from "./services/color";
 import { commands, events, unloaders } from "./services/loader";
-
+import { $f } from "./services/formatter";
 globalThis.rjafn = JavaWrapper.methodToJavaAsync;
 globalThis.rjfn = JavaWrapper.methodToJava;
 globalThis.jafn = function (fn) {
@@ -31,6 +32,7 @@ globalThis.jfn = function (fn) {
 } as any;
 globalThis.jf = Java.from;
 globalThis.int = Math.floor;
+globalThis.$f = $f;
 const jt = Java.type;
 
 const mappings = Reflection.loadMappingHelper(
@@ -53,6 +55,8 @@ declare global {
 	var mappings: ReturnType<typeof Reflection.loadMappingHelper>;
 
 	var int: typeof Math.floor;
+
+	var $f: (str: string) => SoupLike[];
 }
 
 const BASE_DIR =
