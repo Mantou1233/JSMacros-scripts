@@ -3,5 +3,8 @@
 	"version": "1.0.0",
 	"scripts": {
 		"a": "tsx scripts/services/formatter.ts"
+	},
+	"dependencies": {
+		"@types/node": "^18.16.0"
 	}
 }

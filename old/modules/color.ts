@@ -39,12 +39,11 @@ const command = Chat.createCommandBuilder("color")
 			);
 		})
 	)
-	.or(2)
+	.or(1)
 	.literalArg("getJson")
 	.greedyStringArg("text")
 	.executes(
 		jfn(ctx => {
-			const soup = $f(ctx.getArg("text"));
 			Chat.log(
 				Chat.createTextBuilder()
 					.append(Chat.createTextHelperFromJSON(JSON.stringify(soup)))
