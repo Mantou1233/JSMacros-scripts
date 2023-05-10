@@ -18,27 +18,12 @@ declare global {
 	var mappings: ReturnType<typeof Reflection.loadMappingHelper>;
 
 	var int: typeof Math.floor;
+	var cmd: CommandBuilder;
 }
 
 utils.init();
-let cmd;
 async function main() {
-	cmd = Chat.getCommandManager()
-		.createCommandBuilder("eval")
-		.greedyStringArg("cmd")
-		.executes(
-			$.jfn(ctx => {
-				try {
-					const r = eval(ctx.getArg("cmd"));
-
-					Chat.log(r);
-				} catch (e) {
-					Chat.log(e);
-				}
-			})
-		);
-
-	$.cmd.add(cmd);
+	require("./scr/index");
 
 	Chat.log("wait me for 5 sec pls");
 	let rnTime = Date.now();

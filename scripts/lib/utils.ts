@@ -56,11 +56,19 @@ const utils = {
 
 	ev: null as any as EventManager,
 
+	pos: ps => {
+		if (ps.getX && ps.getY && ps.getZ)
+			return [ps.getX(), ps.getY(), ps.getZ()];
+
+		if (ps.x && ps.y && ps.z) return [ps.x, ps.y, ps.z];
+	},
+
 	cmd: {
 		cache: [] as CommandBuilder[],
 
 		add(cmd: CommandBuilder) {
 			cmd.register();
+
 			$.cmd.cache.push(cmd);
 		},
 

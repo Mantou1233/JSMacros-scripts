@@ -40,7 +40,7 @@ export class EventManager {
 			cb.res(null);
 			cb.cancel = true;
 		};
-		// if (timeout > 0) this.waitTick(timeout, res.cancel);
+		if (timeout > 0) $.waitTick(timeout, res.cancel);
 		this.tmpListeners[event] ??= {
 			listener: JsMacros.on(
 				event,
